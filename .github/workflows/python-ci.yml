@@ -1,0 +1,43 @@
+# .github/workflows/python-ci.yml
+
+# このワークフロー（一連の自動化作業）の名前
+name: Python CI with Pytest
+
+# このワークフローが実行される「きっかけ（トリガー）」を指定
+on:
+  # "main"ブランチにプッシュされた時に実行
+  push:
+    branches: [ "main" ]
+  # "main"ブランチへのプルリクエストが作成/更新された時に実行
+  pull_request:
+    branches: [ "main" ]
+
+# 実行する一連のタスク（ジョブ）を定義
+jobs:
+  # 'test'という名前のジョブ（名前はbuildなど任意）
+  test:
+    # このジョブを実行する仮想環境のOS。最新のUbuntuを使うのが一般的。
+    runs-on: ubuntu-latest
+
+    # ジョブの中で実行する個々のステップ
+    steps:
+      # 1. リポジトリのコードを仮想環境にチェックアウト（コピー）するステップ
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      # 2. Python環境をセットアップするステップ
+      - name: Set up Python environment
+        uses: actions/setup-python@v5
+        with:
+          # あなたが使っているPythonのバージョンを指定
+          python-version: '3.13.2'
+
+      # 3. 依存ライブラリをインストールするステップ
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      # 4. pytestでテストを実行するステップ
+      - name: Run tests with pytest
+        run: pytest
